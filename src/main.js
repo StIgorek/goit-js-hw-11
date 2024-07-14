@@ -37,6 +37,9 @@ function handlerSubmit(event) {
         .then((data) => {
             refs.loader.classList.remove("loader");
             const hits = data.hits;
+            if (hits.length === 0) {
+                fetchError();
+            } 
             refs.gallery.insertAdjacentHTML("beforeend", renderPictures(hits));
             lightbox.refresh();
         })
