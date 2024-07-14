@@ -4,15 +4,50 @@ import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-import { getPicturesByQuery } from "./js/pixabay-api";
-import { } from "./js/render-functions";
+import { renderPictures } from "./js/render-functions";
+import { generateHttpsQuery, fetchPictures } from "./js/pixabay-api";
 
-const ref = {
-  form: document.querySelector('.form'),
-  input: document.querySelector('.input'),
-  btn: document.querySelector('.button'),
+const lightbox = new SimpleLightbox('.gallery a', {
+    captionDelay: 250,
+    captionPosition: "bottom",
+    captionsData: "alt"
+});
+
+const refs = {
+    searchForm: document.querySelector(".js-search-form"),
+    gallery: document.querySelector(".js-gallery"),
+    loader: document.querySelector(".js-loader"),
 };
 
-getPicturesByQuery('grey+car')
-  .then((data) => console.log(data))
-  .catch((err) => console.error('Fetch Error:', err));
+refs.searchForm.addEventListener("submit", handlerSubmit);
+
+function handlerSubmit(event) {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const formValue = form.elements.searchtext.value.toLowerCase().trim();
+    refs.gallery.innerHTML = "";
+    refs.loader.classList.add("loader");
+        if (formValue === "") {
+            fetchError();
+            refs.loader.classList.remove("loader");
+            return;
+        } 
+    fetchPictures(generateHttpsQuery(formValue))
+        .then((data) => {
+            refs.loader.classList.remove("loader");
+            const hits = data.hits;
+            refs.gallery.insertAdjacentHTML("beforeend", renderPictures(hits));
+            lightbox.refresh();
+        })
+        .catch(fetchError)
+        .finally(() => refs.searchForm.reset());
+}
+
+function fetchError(error) {
+    iziToast.error({
+        title: "Error",
+        message: "Sorry, there are no images matching your search query. Please try again!",
+    });
+}
+
