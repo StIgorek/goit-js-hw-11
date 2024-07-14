@@ -7,16 +7,26 @@
     <title>Get Pictures</title>
     
     <script type="module" crossorigin src="/goit-js-hw-11/commonHelpers.js"></script>
-    <link rel="modulepreload" crossorigin href="/goit-js-hw-11/assets/vendor-b20c67ea.js">
+    <link rel="modulepreload" crossorigin href="/goit-js-hw-11/assets/vendor-8c59ed88.js">
     <link rel="stylesheet" href="/goit-js-hw-11/assets/vendor-1cd1f9d9.css">
-    <link rel="stylesheet" href="/goit-js-hw-11/assets/index-035c8eaf.css">
+    <link rel="stylesheet" href="/goit-js-hw-11/assets/index-c52e5316.css">
   </head>
   <body>
 
-    <form class="form">
-      <input type="text" class="input" />
-      <button type="button" class="button">Search</button>
+    <form class="search-form js-search-form">
+      <input
+        class="search-input"
+        type="text"
+        name="searchtext"
+        placeholder="Search images..."
+      />
+      <button class="search-button" type="submit">Search</button>
     </form>
+
+    <section class="container">
+      <span class="js-loader"></span>
+      <ul class="gallery js-gallery"></ul>
+    </section>
     
     
   </body>
